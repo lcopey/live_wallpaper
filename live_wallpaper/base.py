@@ -7,7 +7,7 @@ from typing import List
 
 import requests
 
-from .image import get_image_patches, stitch_images
+from .image import async_get_image_patches, stitch_images, get_image_patches
 
 
 def get_dates(satellite: str = 'meteosat-11') -> List[datetime]:
@@ -26,7 +26,8 @@ def get_dates(satellite: str = 'meteosat-11') -> List[datetime]:
 def latest_as_png(file_path: str, satellite='meteosat-11'):
     """Get latest image and save it as png."""
     dates = get_dates(satellite=satellite)
-    images = asyncio.run(get_image_patches('planet', dates[-1], scale=3, satellite=satellite))
+    images = get_image_patches('planet', dates[-1], scale=3, satellite=satellite)
+    # images = asyncio.run(async_get_image_patches('planet', dates[-1], scale=3, satellite=satellite))
     img = stitch_images(images)
     # img = stitch_image('planet', dates[-1], scale=3, satellite=satellite)
     img.save(file_path)
